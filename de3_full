@@ -1,0 +1,238 @@
+câu 1:
+            Tạo interface Customer gồm:
+            double calculateTotalPurchase() – tính tổng số tiền khách hàng đã mua.
+            void showInfo() – hiển thị thông tin khách hàng.
+
+            b. Tạo 2 lớp PremiumCustomer và RegularCustomer:
+            Thuộc tính name và id.
+            PremiumCustomer có discountRate (giảm giá %).
+            RegularCustomer có point (điểm thưởng).
+            calculateTotalPurchase():
+            Với PremiumCustomer: áp dụng giảm giá.
+            Với RegularCustomer: mỗi 10k được 1 điểm.
+            showInfo() hiển thị thông tin khách hàng.
+
+            c. Trong main():
+            Tạo một đối tượng PremiumCustomer và một RegularCustomer.
+            Gọi showInfo() để hiển thị kết quả
+
+/**
+ * Interface Customer định nghĩa phương thức tính tổng tiền và hiển thị thông tin.
+ */
+interface Customer {
+    double calculateTotalPurchase();
+    void showInfo();
+}
+
+/**
+ * Lớp PremiumCustomer kế thừa Customer, có giảm giá.
+ */
+class PremiumCustomer implements Customer {
+    private String name;
+    private int id;
+    private double discountRate;
+    private double totalPurchase;
+
+    public PremiumCustomer(String name, int id, double discountRate, double totalPurchase) {
+        this.name = name;
+        this.id = id;
+        this.discountRate = discountRate;
+        this.totalPurchase = totalPurchase;
+    }
+
+    public double calculateTotalPurchase() {
+        return totalPurchase * (1 - discountRate / 100);
+    }
+
+    public void showInfo() {
+        System.out.println("Name: " + name);
+        System.out.println("ID: " + id);
+        System.out.println("Discount rate: " + discountRate + "%");
+        System.out.println("Total purchase after discount: " + calculateTotalPurchase());
+    }
+}
+
+/**
+ * Lớp RegularCustomer kế thừa Customer, có điểm thưởng.
+ */
+class RegularCustomer implements Customer {
+    private String name;
+    private int id;
+    private int point;
+    private double totalPurchase;
+
+    public RegularCustomer(String name, int id, int point, double totalPurchase) {
+        this.name = name;
+        this.id = id;
+        this.point = point;
+        this.totalPurchase = totalPurchase;
+    }
+
+    public double calculateTotalPurchase() {
+        point += totalPurchase / 10;
+        return totalPurchase;
+    }
+
+    public void showInfo() {
+        calculateTotalPurchase(); // cập nhật point
+        System.out.println("Name: " + name);
+        System.out.println("ID: " + id);
+        System.out.println("Total purchase: " + totalPurchase);
+        System.out.println("Points after purchase: " + point);
+    }
+}
+
+public class c1d3 {
+    public static void main(String[] args) {
+        PremiumCustomer john = new PremiumCustomer("John", 12345, 10.0, 450.0);
+        RegularCustomer jane = new RegularCustomer("Jane", 67890, 50, 800.0);
+
+        john.showInfo();
+        System.out.println();
+        jane.showInfo();
+    }
+}
+
+câu 2:
+            Viết chương trình:
+            Dùng BufferedWriter ghi tên của bạn và một bạn khác (có dấu) vào file names_utf8.txt.
+            Dùng BufferedReader đọc file và hiển thị ra màn hình.
+            Yêu cầu: chỉ phần họ viết in hoa.
+
+            Ví dụ kết quả:
+            NGUYỄN Văn An
+            TRẦN Thị Bình
+
+import java.io.*;
+
+public class c2d3 {
+    public static void main(String[] args) {
+        try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("names_utf8.txt"), "UTF-8"))) {
+            writer.write("NGUYỄN Văn An\n");
+            writer.write("TRẦN Thị Bình\n");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream("names_utf8.txt"), "UTF-8"))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] parts = line.split(" ", 2);
+                System.out.println(parts[0].toUpperCase() + " " + (parts.length > 1 ? parts[1] : ""));
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+}
+
+
+câu 3:
+            Tạo 2 thread:
+            Thread 1: In số nguyên chia hết cho 2 từ 1 đến 50
+            Thread 2: In số nguyên chia hết cho 5 từ 50 đến 100.
+
+            Ví dụ kết quả:
+            Thread 1 – số nguyên tố: ...
+            Thread 2 – số chia hết cho 5: ...
+
+class EvenThread extends Thread {
+    public void run() {
+        System.out.println("Thread 1 - Số nguyên chia hết cho 2 từ 1 đến 50:");
+        for (int i = 1; i <= 50; i++) {
+            if (i % 2 == 0) System.out.print(i + " ");
+        }
+        System.out.println();
+    }
+}
+
+class DivisibleBy5Thread extends Thread {
+    public void run() {
+        System.out.println("Thread 2 - Số chia hết cho 5 từ 50 đến 100:");
+        for (int i = 50; i <= 100; i++) {
+            if (i % 5 == 0) System.out.print(i + " ");
+        }
+        System.out.println();
+    }
+}
+
+public class c3d3 {
+    public static void main(String[] args) {
+        Thread t1 = new EvenThread();
+        Thread t2 = new DivisibleBy5Thread();
+        t1.start();
+        t2.start();
+    }
+}
+
+
+câu 4:
+            Viết chương trình sử dụng LinkedHashMap lưu họ tên sinh viên và điểm.
+            Yêu cầu:
+            In danh sách sinh viên theo thứ tự họ tên tăng dần.
+            Nếu tên trùng thì vẫn giữ theo họ tên.
+
+            Dữ liệu đầu vào:
+            Nguyen Bao Ngoc     88
+            Tran Tuan Anh       92
+            Le Tuan Anh         85
+            Nguyen Phuong An    79
+            Le Van Cong         95
+
+            Kết quả:
+            Danh sách sinh viên theo thứ tự họ tên:
+            Nguyen Phuong An: 79
+            Le Tuan Anh: 85
+            ...
+
+import java.util.*;
+
+public class c4d3 {
+    public static void main(String[] args) {
+        Map<String, Integer> students = new LinkedHashMap<>();
+        students.put("Nguyen Bao Ngoc", 88);
+        students.put("Tran Tuan Anh", 92);
+        students.put("Le Tuan Anh", 85);
+        students.put("Nguyen Phuong An", 79);
+        students.put("Le Van Cong", 95);
+
+        List<Map.Entry<String, Integer>> sorted = new ArrayList<>(students.entrySet());
+        sorted.sort(Comparator.comparing(Map.Entry::getKey));
+
+        System.out.println("Danh sách sinh viên theo thứ tự họ tên:");
+        for (Map.Entry<String, Integer> entry : sorted) {
+            System.out.println(entry.getKey() + ": " + entry.getValue());
+        }
+    }
+}
+
+
+câu 5:
+            Viết chương trình:
+            Sử dụng Lambda để chuyển các chuỗi trong danh sách thành chữ viết hoa.
+
+            Input:
+            List<String> strings = Arrays.asList("apple", "banana", "orange", "grape", "watermelon");
+
+            Output:
+            Danh sách các chuỗi viết hoa:
+            APPLE
+            BANANA
+            ORANGE
+            ...
+
+import java.util.*;
+import java.util.stream.Collectors;
+
+public class c5d3 {
+    public static void main(String[] args) {
+        List<String> strings = Arrays.asList("apple", "banana", "orange", "grape", "watermelon");
+
+        List<String> upperList = strings.stream()
+                                        .map(s -> s.toUpperCase())
+                                        .collect(Collectors.toList());
+
+        System.out.println("Danh sách các chuỗi viết hoa:");
+        upperList.forEach(System.out::println);
+    }
+}
