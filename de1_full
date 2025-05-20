@@ -1,0 +1,256 @@
+câu 1:
+            Tạo interface IAnimal:
+            Phương thức makeSound() in ra âm thanh.
+            Hằng số MAX_AGE = 100.
+
+            Tạo 3 lớp Animal, Cat, Dog:
+            Animal: có thuộc tính age (private int), phương thức showInfo().
+            Cat và Dog: có thuộc tính name (public String), triển khai makeSound().
+
+            Trong main() tạo:
+            1 đối tượng Animal tuổi 5.
+            1 đối tượng Cat tên Mini.
+            1 đối tượng Dog tên Hachi, tuổi 5.
+
+            In thông tin, tiếng kêu và tuổi/MAX_AGE.
+
+interface IAnimal {
+    void makeSound();
+    int MAX_AGE = 100;
+}
+
+class Cat implements IAnimal {
+    private String name;
+    private int age;
+
+    public Cat(String name, int age) {
+        this.name = name;
+        this.age = age;
+    }
+
+    @Override
+    public void makeSound() {
+        System.out.println(name + ": Meow");
+    }
+
+    public void showInfo() {
+        System.out.println("Age of animal: " + age);
+        System.out.println("MAX_AGE: " + MAX_AGE);
+    }
+}
+
+class Dog implements IAnimal {
+    private String name;
+    private int age;
+
+    public Dog(String name, int age) {
+        this.name = name;
+        this.age = age;
+    }
+
+    @Override
+    public void makeSound() {
+        System.out.println(name + ": Woof");
+    }
+
+    public void showInfo() {
+        System.out.println("Age of animal: " + age);
+        System.out.println("MAX_AGE: " + MAX_AGE);
+    }
+}
+
+public class c1d1 {
+    public static void main(String[] args) {
+        IAnimal animal = new IAnimal() {
+            @Override
+            public void makeSound() {
+                System.out.println("The animal makes a sound");
+            }
+        };
+        animal.makeSound();
+
+        Cat cat = new Cat("Mini", 5);
+        Dog dog = new Dog("Hachi", 5);
+
+        cat.makeSound();
+        dog.makeSound();
+
+        cat.showInfo();
+    }
+
+}
+
+câu 2:
+                Ghi và đọc file students.txt:
+                Dùng OutputStreamWriter ghi tên mình và 2 bạn khác.
+                Dùng InputStreamReader đọc và in ra màn hình.
+
+import java.io.*;
+
+/**
+ * Lớp c2d1 thực hiện ghi và đọc dữ liệu tên sinh viên từ file.
+ */
+public class c2d1 {
+
+    public static void main(String[] args) {
+        // Ghi dữ liệu vào file
+        try (OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream("students.txt"))) {
+            writer.write("Nguyễn Văn Minh\n");
+            writer.write("Trần Đức Trung\n");
+            writer.write("Lê Xuân Toàn\n");
+        } catch (IOException e) {
+            System.out.println("Lỗi khi ghi file: " + e.getMessage());
+        }
+
+        try (InputStreamReader reader = new InputStreamReader(new FileInputStream("students.txt"))) {
+            int c;
+            while ((c = reader.read()) != -1) {
+                System.out.print((char) c);
+            }
+        } catch (IOException e) {
+            System.out.println("Lỗi khi đọc file: " + e.getMessage());
+        }
+    }
+}
+
+câu 3:
+                Tạo 2 Thread:
+                Thread 1: tính tổng số từ 1 đến 10000.
+                Thread 2: tính tổng số từ 10001 đến 20000.
+
+                Kết quả ví dụ:
+                Thread 2 - Tổng của các số từ 10001 đến 20000: ...
+                Thread 1 - Tổng của các số từ 1 đến 10000: ...
+
+/**
+ * Lớp SumThread kế thừa Thread để tính tổng các số trong khoảng cho trước.
+ */
+class SumThread extends Thread {
+    private int start, end;
+
+    /**
+     * Khởi tạo một Thread tính tổng từ start đến end.
+     * @param start Số bắt đầu.
+     * @param end Số kết thúc.
+     */
+    public SumThread(int start, int end) {
+        this.start = start;
+        this.end = end;
+    }
+
+    /**
+     * Thực thi luồng: tính tổng các số từ start đến end và in ra màn hình.
+     */
+    public void run() {
+        long sum = 0;
+        for (int i = start; i <= end; i++) {
+            sum += i;
+        }
+        System.out.println("Thread " + getName() + " - Tổng các số từ " + start + " đến " + end + ": " + sum);
+    }
+}
+
+/**
+ * Lớp c3d1 chạy chương trình tạo 2 luồng tính tổng.
+ */
+public class c3d1 {
+    public static void main(String[] args) {
+        Thread t1 = new SumThread(1, 10000);
+        Thread t2 = new SumThread(10001, 20000);
+        t1.setName("1");
+        t2.setName("2");
+        t1.start();
+        t2.start();
+    }
+}
+
+
+câu 4:
+            Viết phương thức nhận vào mảng số nguyên và loại bỏ phần tử trùng lặp bằng HashSet. In ra các phần tử duy nhất.
+
+            Ví dụ:
+            Integer[] array = {1, 2, 5, 2, 7, 4, 7, 9, 1, 4};
+
+            Kết quả:
+            Các phần tử duy nhất trong mảng: ...
+
+import java.util.*;
+
+/**
+ * Lớp c4d1 dùng để loại bỏ phần tử trùng lặp trong mảng bằng HashSet.
+ */
+public class c4d1 {
+    public static void main(String[] args) {
+        Integer[] array = {1, 2, 2, 5, 2, 4, 7, 7, 4, 9, 1, 4};
+
+        // HashSet tự động loại bỏ phần tử trùng
+        Set<Integer> uniqueSet = new HashSet<>(Arrays.asList(array));
+
+        System.out.println("Các phần tử duy nhất trong mảng:");
+        for (Integer num : uniqueSet) {
+            System.out.print(num + " ");
+        }
+    }
+}
+
+câu 5:
+                Viết chương trình sử dụng Consumer để in thông tin chi tiết đối tượng Person.
+
+                    Dữ liệu mẫu:
+                List<Person> people = Arrays.asList(
+                    new Person("John", 30),
+                    new Person("Alice", 27),
+                    new Person("Bob", 35)
+                );
+
+                    Kết quả mong đợi:
+                Thông tin chi tiết của từng Person:
+                ...
+
+import java.util.*;
+import java.util.function.Consumer;
+
+/**
+ * Lớp đại diện cho một đối tượng Person với tên và tuổi.
+ */
+class Person {
+    private String name;
+    private int age;
+
+    /**
+     * Khởi tạo Person với tên và tuổi.
+     * @param name Tên người.
+     * @param age Tuổi người.
+     */
+    public Person(String name, int age) {
+        this.name = name;
+        this.age = age;
+    }
+
+    /**
+     * In thông tin của đối tượng Person.
+     */
+    public void printInfo() {
+        System.out.println("Tên: " + name + ", Tuổi: " + age);
+    }
+}
+
+/**
+ * Lớp c5d1 chạy chương trình sử dụng Consumer để in thông tin Person.
+ */
+public class c5d1 {
+    public static void main(String[] args) {
+        List<Person> people = Arrays.asList(
+                new Person("John", 30),
+                new Person("Alice", 25),
+                new Person("Bob", 35)
+        );
+
+        // Consumer in thông tin của Person
+        Consumer<Person> showDetails = p -> p.printInfo();
+
+        System.out.println("Thông tin chi tiết của từng Person:");
+        people.forEach(showDetails);
+    }
+}
+
